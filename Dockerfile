@@ -1,13 +1,11 @@
-# Начните с альпийского изображения, которое меньше, но без причудливых инструментов.
-FROM alpine:3.13
+FROM ubuntu:18.04
 
-#Используйте /usr/src/app в качестве рабочего каталога. В этом месте будут выполняться следующие инструкции.
-WORKDIR /usr/src/app
-# Скопируйте файл hello.sh из этого места в /usr/src/app/, создав /usr/src/app/hello.sh
-COPY hello.sh .
+WORKDIR /mydir
 
-# В качестве альтернативы, если мы пропустили chmod ранее, мы можем добавить разрешения на выполнение во время сборки. 
-RUN chmod +x hello.sh
-RUN touch additional.txt
-# При запуске docker run команда будет ./hello.sh
-CMD . hello.sh
+RUN apt-get update && apt-get install -y curl python
+RUN curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/youtube-dl
+RUN chmod a+x /usr/local/bin/youtube-dl
+
+ENV LC_ALL=C.UTF-8
+
+ENTRYPOINT ["/usr/local/bin/youtube-dl"]
